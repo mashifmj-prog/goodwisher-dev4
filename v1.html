@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodWisher - Create Beautiful Greeting Cards</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4a6fa5;
+            --primary-light: #6b8cc0;
+            --secondary: #ff7e5f;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --gray: #6c757d;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--border-radius);
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .card-header h2 {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-light);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.25);
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -0.75rem;
+        }
+
+        .form-col {
+            flex: 1;
+            padding: 0 0.75rem;
+            min-width: 250px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Message Categories */
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background-color: white;
+            border: 1px solid #ced4da;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .category-btn:hover {
+            background-color: #f8f9fa;
+        }
+
+        .category-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Preview Section */
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .preview-card {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .preview-header {
+            margin-bottom: 1rem;
+        }
+
+        .preview-title {
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-subtitle {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+
+        .preview-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .preview-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 350px;
+        }
+
+        .toast {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .toast-success .toast-icon {
+            background-color: var(--success);
+        }
+
+        .toast-error .toast-icon {
+            background-color: var(--danger);
+        }
+
+        .toast-warning .toast-icon {
+            background-color: var(--warning);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            margin-top: 1rem;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            nav {
+                width: 100%;
+                margin-top: 1rem;
+                display: none;
+            }
+
+            nav.show {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-col {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .preview-card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                padding: 1rem;
+            }
+
+            .preview-card {
+                min-height: 250px;
+            }
+
+            .preview-title {
+                font-size: 1.5rem;
+            }
+
+            .toast-container {
+                left: 15px;
+                right: 15px;
+                max-width: none;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error States */
+        .error {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .has-error .form-control {
+            border-color: var(--danger);
+        }
+
+        .has-error .error {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🎉</span>
+                    <h1>GoodWisher</h1>
+                </div>
+                <button class="nav-toggle" id="navToggle">☰</button>
+                <nav id="mainNav">
+                    <ul>
+                        <li><a href="#" class="active">Create Card</a></li>
+                        <li><a href="#">Templates</a></li>
+                        <li><a href="#">My Cards</a></li>
+                        <li><a href="#">Help</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Create Your Greeting Card</h2>
+                    <p>Design a beautiful personalized greeting card for any occasion</p>
+                </div>
+
+                <!-- Message Categories -->
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <div class="categories">
+                        <button class="category-btn active" data-category="birthday">Birthday</button>
+                        <button class="category-btn" data-category="anniversary">Anniversary</button>
+                        <button class="category-btn" data-category="congratulations">Congratulations</button>
+                        <button class="category-btn" data-category="thankyou">Thank You</button>
+                        <button class="category-btn" data-category="getwell">Get Well Soon</button>
+                        <button class="category-btn" data-category="sympathy">Sympathy</button>
+                        <button class="category-btn" data-category="holiday">Holiday</button>
+                        <button class="category-btn" data-category="custom">Custom</button>
+                    </div>
+                </div>
+
+                <form id="cardForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="recipientName">Recipient Name</label>
+                                <input type="text" id="recipientName" class="form-control" placeholder="Enter recipient's name">
+                                <div class="error" id="recipientNameError">Please enter a recipient name</div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="senderName">Your Name</label>
+                                <input type="text" id="senderName" class="form-control" placeholder="Enter your name">
+                                <div class="error" id="senderNameError">Please enter your name</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Your Message</label>
+                        <textarea id="message" class="form-control" rows="5" placeholder="Write your heartfelt message here..."></textarea>
+                        <div class="error" id="messageError">Please enter a message</div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="cardTheme">Card Theme</label>
+                                <select id="cardTheme" class="form-control">
+                                    <option value="classic">Classic</option>
+                                    <option value="modern">Modern</option>
+                                    <option value="elegant">Elegant</option>
+                                    <option value="fun">Fun & Playful</option>
+                                    <option value="minimal">Minimalist</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="cardColor">Card Color</label>
+                                <select id="cardColor" class="form-control">
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="purple">Purple</option>
+                                    <option value="pink">Pink</option>
+                                    <option value="orange">Orange</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block" id="generateBtn">
+                        <span class="loading" id="loadingIndicator" style="display: none;"></span>
+                        Generate Card
+                    </button>
+                </form>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-container" id="previewSection" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Your Card Preview</h2>
+                        <p>This is how your card will look</p>
+                    </div>
+                    
+                    <div class="preview-card" id="previewCard">
+                        <div class="preview-header">
+                            <h3 class="preview-title" id="previewTitle">Happy Birthday!</h3>
+                            <p class="preview-subtitle" id="previewSubtitle">A special message for you</p>
+                        </div>
+                        <div class="preview-message" id="previewMessage">
+                            Your message will appear here...
+                        </div>
+                        <div class="preview-footer">
+                            <p id="previewFooter">With love, [Your Name]</p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn" id="shareBtn">Share Card</button>
+                        <button class="btn btn-secondary" id="downloadBtn">Download as Image</button>
+                        <button class="btn" id="createNewBtn">Create Another Card</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <span class="logo-icon">🎉</span>
+                    <h2>GoodWisher</h2>
+                </div>
+                <div class="footer-links">
+                    <a href="#">About Us</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact</a>
+                </div>
+                <p class="copyright">© 2025 GoodWisher. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const navToggle = document.getElementById('navToggle');
+        const mainNav = document.getElementById('mainNav');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const cardForm = document.getElementById('cardForm');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const previewSection = document.getElementById('previewSection');
+        const previewCard = document.getElementById('previewCard');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewSubtitle = document.getElementById('previewSubtitle');
+        const previewMessage = document.getElementById('previewMessage');
+        const previewFooter = document.getElementById('previewFooter');
+        const shareBtn = document.getElementById('shareBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const createNewBtn = document.getElementById('createNewBtn');
+        const toastContainer = document.getElementById('toastContainer');
+
+        // Category data with predefined messages
+        const categoryData = {
+            birthday: {
+                title: "Happy Birthday!",
+                subtitle: "Wishing you a wonderful day",
+                defaultMessage: "Wishing you a day filled with happiness and a year filled with joy. Happy birthday!"
+            },
+            anniversary: {
+                title: "Happy Anniversary!",
+                subtitle: "Celebrating your special day",
+                defaultMessage: "Wishing you continued love and happiness for many more years to come."
+            },
+            congratulations: {
+                title: "Congratulations!",
+                subtitle: "Celebrating your achievement",
+                defaultMessage: "So proud of your accomplishment! You've worked hard and deserve all the success."
+            },
+            thankyou: {
+                title: "Thank You",
+                subtitle: "With sincere gratitude",
+                defaultMessage: "I'm truly grateful for your kindness and support. Thank you for everything."
+            },
+            getwell: {
+                title: "Get Well Soon",
+                subtitle: "Wishing you a speedy recovery",
+                defaultMessage: "Sending healing thoughts and well wishes your way. Hope you feel better soon!"
+            },
+            sympathy: {
+                title: "With Sympathy",
+                subtitle: "Thinking of you during this difficult time",
+                defaultMessage: "My heartfelt condolences to you and your family. May you find comfort in your memories."
+            },
+            holiday: {
+                title: "Season's Greetings",
+                subtitle: "Wishing you joy this holiday season",
+                defaultMessage: "May this special time bring you happiness, peace, and prosperity."
+            },
+            custom: {
+                title: "Special Greetings",
+                subtitle: "A personalized message just for you",
+                defaultMessage: "Write your own custom message to make it truly special."
+            }
+        };
+
+        // Current selected category
+        let currentCategory = 'birthday';
+
+        // Initialize the app
+        function init() {
+            // Set up event listeners
+            navToggle.addEventListener('click', toggleMobileNav);
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', handleCategoryChange);
+            });
+            
+            cardForm.addEventListener('submit', handleFormSubmit);
+            shareBtn.addEventListener('click', handleShare);
+            downloadBtn.addEventListener('click', handleDownload);
+            createNewBtn.addEventListener('click', resetForm);
+            
+            // Set default message for initial category
+            updateDefaultMessage();
+        }
+
+        // Toggle mobile navigation
+        function toggleMobileNav() {
+            mainNav.classList.toggle('show');
+        }
+
+        // Handle category change
+        function handleCategoryChange(e) {
+            // Update active category button
+            categoryBtns.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            // Update current category
+            currentCategory = e.target.dataset.category;
+            
+            // Update default message
+            updateDefaultMessage();
+            
+            // Show toast notification
+            showToast('Category Updated', `Changed to ${capitalizeFirstLetter(currentCategory)} category`, 'success');
+        }
+
+        // Update default message based on selected category
+        function updateDefaultMessage() {
+            const messageField = document.getElementById('message');
+            const category = categoryData[currentCategory];
+            
+            if (messageField.value === '' || messageField.value === categoryData.birthday.defaultMessage) {
+                messageField.value = category.defaultMessage;
+            }
+        }
+
+        // Handle form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            // Validate form
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Show loading state
+            generateBtn.disabled = true;
+            loadingIndicator.style.display = 'inline-block';
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                // Generate preview
+                generatePreview();
+                
+                // Hide loading state
+                generateBtn.disabled = false;
+                loadingIndicator.style.display = 'none';
+                
+                // Show preview section
+                previewSection.style.display = 'block';
+                
+                // Scroll to preview
+                previewSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Show success toast
+                showToast('Card Created!', 'Your greeting card has been generated successfully', 'success');
+            }, 1000);
+        }
+
+        // Validate form inputs
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset error states
+            document.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('has-error');
+            });
+            
+            // Validate recipient name
+            const recipientName = document.getElementById('recipientName').value.trim();
+            if (recipientName === '') {
+                document.getElementById('recipientName').parentElement.classList.add('has-error');
+                isValid = false;
+            }
+            
+            // Validate sender name
+            const senderName = document.getElementById('senderName').value.trim();
+            if (senderName === '') {
+                document.getElementById('senderName').parentElement.classList.add('has-error');
+                isValid = false;
+            }
+            
+            // Validate message
+            const message = document.getElementById('message').value.trim();
+            if (message === '') {
+                document.getElementById('message').parentElement.classList.add('has-error');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Generate preview card
+        function generatePreview() {
+            const recipientName = document.getElementById('recipientName').value.trim();
+            const senderName = document.getElementById('senderName').value.trim();
+            const message = document.getElementById('message').value.trim();
+            const cardTheme = document.getElementById('cardTheme').value;
+            const cardColor = document.getElementById('cardColor').value;
+            
+            const category = categoryData[currentCategory];
+            
+            // Update preview content
+            previewTitle.textContent = category.title;
+            previewSubtitle.textContent = category.subtitle;
+            previewMessage.textContent = message;
+            previewFooter.textContent = `With love, ${senderName}`;
+            
+            // Apply theme and color
+            applyCardStyles(cardTheme, cardColor);
+        }
+
+        // Apply card styles based on theme and color
+        function applyCardStyles(theme, color) {
+            // Reset styles
+            previewCard.style.background = '';
+            previewCard.style.color = '';
+            previewCard.style.border = '';
+            
+            // Apply color scheme
+            const colorSchemes = {
+                blue: { bg: '#e3f2fd', text: '#1565c0', accent: '#1976d2' },
+                green: { bg: '#e8f5e9', text: '#2e7d32', accent: '#388e3c' },
+                purple: { bg: '#f3e5f5', text: '#7b1fa2', accent: '#8e24aa' },
+                pink: { bg: '#fce4ec', text: '#c2185b', accent: '#d81b60' },
+                orange: { bg: '#fff3e0', text: '#ef6c00', accent: '#f57c00' }
+            };
+            
+            const scheme = colorSchemes[color] || colorSchemes.blue;
+            
+            // Apply theme-specific styles
+            switch(theme) {
+                case 'modern':
+                    previewCard.style.background = `linear-gradient(135deg, ${scheme.bg}, white)`;
+                    previewCard.style.color = scheme.text;
+                    previewTitle.style.color = scheme.accent;
+                    break;
+                case 'elegant':
+                    previewCard.style.background = 'white';
+                    previewCard.style.color = '#333';
+                    previewCard.style.border = `2px solid ${scheme.accent}`;
+                    previewTitle.style.color = scheme.accent;
+                    break;
+                case 'fun':
+                    previewCard.style.background = scheme.bg;
+                    previewCard.style.color = scheme.text;
+                    previewCard.style.borderRadius = '20px';
+                    previewTitle.style.color = scheme.accent;
+                    break;
+                case 'minimal':
+                    previewCard.style.background = 'white';
+                    previewCard.style.color = '#333';
+                    previewCard.style.border = `1px solid #e0e0e0`;
+                    previewTitle.style.color = scheme.text;
+                    break;
+                default: // classic
+                    previewCard.style.background = scheme.bg;
+                    previewCard.style.color = scheme.text;
+                    previewTitle.style.color = scheme.accent;
+            }
+        }
+
+        // Handle share functionality
+        function handleShare() {
+            // In a real app, this would use the Web Share API or generate a shareable link
+            showToast('Share Feature', 'In Phase 2, this will generate a shareable link', 'warning');
+        }
+
+        // Handle download functionality
+        function handleDownload() {
+            // In a real app, this would use a library like html2canvas to generate an image
+            showToast('Download Feature', 'In Phase 2, this will download your card as an image', 'warning');
+        }
+
+        // Reset form to create a new card
+        function resetForm() {
+            cardForm.reset();
+            previewSection.style.display = 'none';
+            
+            // Reset to default category
+            categoryBtns.forEach(btn => btn.classList.remove('active'));
+            document.querySelector('[data-category="birthday"]').classList.add('active');
+            currentCategory = 'birthday';
+            updateDefaultMessage();
+            
+            // Scroll to form
+            document.querySelector('.card').scrollIntoView({ behavior: 'smooth' });
+            
+            showToast('New Card', 'Ready to create another greeting card', 'success');
+        }
+
+        // Show toast notification
+        function showToast(title, message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '!'
+            };
+            
+            toast.innerHTML = `
+                <div class="toast-icon">${icons[type] || '✓'}</div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Add close functionality
+            const closeBtn = toast.querySelector('.toast-close');
+            closeBtn.addEventListener('click', () => {
+                toast.remove();
+            });
+            
+            // Show toast with animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Utility function to capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
